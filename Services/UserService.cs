@@ -21,6 +21,7 @@ namespace BBTest.Services
             var user = new User { Email = email };
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
+            Console.WriteLine($"CreateUser {user.Email} id {user.UserId}");
             return user;
         }
 
@@ -34,6 +35,7 @@ namespace BBTest.Services
             if (user == null) return null;
             user.Balance += amount;
             await _db.SaveChangesAsync();
+            Console.WriteLine($"Deposit {user.Email} balanse {user.Balance}");
             return user.Balance;
         }
 
@@ -42,11 +44,23 @@ namespace BBTest.Services
             if (amount <= 0) return (false, "Invalid amount", null);
             var user = GetUser(userId);
             if (user == null) return (false, "User not found", null);
-            if (user.Balance < amount) return (false, "Insufficient funds", null);
+            if (user.Balance < amount)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Withdraw {user.Email} id {user.Balance} amount {amount} ERROR Invalid amount");
+                Console.ForegroundColor = ConsoleColor.White;
+                return (false, "Insufficient funds", null);
+            }
             user.Balance -= amount;
             await _db.SaveChangesAsync();
+            Console.WriteLine($"Withdraw {user.Email} balance {user.Balance} amount {amount}");
             return (true, null, user.Balance);
         }
+        /// <summary>
+        /// проверка валидности почты
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         private bool IsValidEmail(string email)
         {
             return new EmailAddressAttribute().IsValid(email);

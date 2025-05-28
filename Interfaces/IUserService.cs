@@ -6,19 +6,19 @@ namespace BBTest.Interfaces
     public interface IUserService
     {
         /// <summary>
-        /// Создать пользователя по емаилу 
+        /// Регистрирует нового пользователя.
         /// </summary>
         Task<User> CreateUser(string email);
         /// <summary>
-        /// Получить пользователя
+        /// Получает пользователя.
         /// </summary>
         User? GetUser(Guid userId);
         /// <summary>
-        /// Отправить депозит
+        /// Эмулирует пополнение счёта пользователя.
         /// </summary>
         Task<double?> DepositAsync(Guid userId, double amount);
         /// <summary>
-        /// Снять деньги
+        /// Эмулирует вывод средств с баланса.
         /// </summary>
         Task<(bool Success, string? Error, double? NewBalance)> WithdrawAsync(Guid userId, double amount);
     }
